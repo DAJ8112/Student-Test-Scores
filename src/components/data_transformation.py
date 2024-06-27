@@ -15,7 +15,7 @@ from exception import CustomException
 from logger import logging
 from utils import save_object
 
-
+# sys.setrecursionlimit(4000)
 @dataclass
 class DataTransformationConfig:
     preprocessor_obj_file_path = os.path.join("artifacts", "preprocessor.pkl")
@@ -23,22 +23,31 @@ class DataTransformationConfig:
 
 class DataTransformation:
     def __init__(self):
-        self.data_transforamtion_config = DataTransformation()
+        self.data_transformation_config = DataTransformationConfig()
 
     def get_data_transformer_object(self):
         """
         Method responsible for data transformation.
         """
         try:
+            # numerical_features = ["writing score", "reading score"]
+            # categorical_features = [
+            #     "gender",
+            #     "race_ethnicity",
+            #     "parental level of education",
+            #     "lunch",
+            #     "test preparation course",
+            # ]
+
             numerical_features = ["writing_score", "reading_score"]
             categorical_features = [
                 "gender",
                 "race_ethnicity",
-                " parental_level_of_education",
+                "parental_level_of_education",
                 "lunch",
                 "test_preparation_course",
             ]
-
+            
             num_pipeline = Pipeline(
                 steps=[
                     ("imputer", SimpleImputer(strategy="median")),
@@ -50,7 +59,7 @@ class DataTransformation:
                 steps=[
                     ("imputer", SimpleImputer(strategy="most_frequent")),
                     ("one_hot_encoder", OneHotEncoder()),
-                    ("scaler", StandardScaler()),
+                    ("scaler", StandardScaler(with_mean=False)),
                 ]
             )
 
@@ -105,14 +114,14 @@ class DataTransformation:
             logging.info("Saved Processing object.")
 
             save_object(
-                file_path=self.data_transforamtion_config.preprocessor_obj_file_path,
+                file_path=self.data_transformation_config.preprocessor_obj_file_path,
                 obj=preprocessing_obj,
             )
 
             return (
                 train_arr,
                 test_arr,
-                self.data_transforamtion_config.preprocessor_obj_file_path,
+                self.data_transformation_config.preprocessor_obj_file_path,
             )
 
         except Exception as e:
