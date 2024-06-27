@@ -1,9 +1,11 @@
+import os
 import sys
 import numpy as np
 import pandas as pd
 import dill
 
-from src.exception import CustomException
+sys.path.insert(0, "./src")
+from exception import CustomException
 
 
 def save_object(file_path, obj):

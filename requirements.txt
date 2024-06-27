@@ -5,4 +5,7 @@ matplotlib
 scikit-learn
 notebook
 dill
+catboost
+xgboost
+Flask
 #-e .
